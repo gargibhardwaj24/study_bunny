@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stay focused</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 50% 30%, #232a3d, #11131a 70%);
+      color: #e6e8eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      text-align: center;
+      padding: 40px;
+      max-width: 460px;
+    }
+    .emoji { font-size: 64px; }
+    h1 { font-size: 28px; margin: 16px 0 8px; }
+    p { color: #9ba1a6; font-size: 16px; line-height: 1.5; margin: 0 0 8px; }
+    .timer {
+      margin-top: 24px;
+      font-size: 40px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #5b8cff;
+    }
+    .label { font-size: 13px; color: #9ba1a6; letter-spacing: .05em; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">🌱</div>
+    <h1>Stay focused</h1>
+    <p>This site is blocked while your focus session is running.</p>
+    <p>Get back to it — the distraction will still be there later.</p>
+    <div id="remainingWrap" hidden>
+      <div class="timer" id="remaining">--:--</div>
+      <div class="label">remaining</div>
+    </div>
+  </div>
+
+  <script src="blocked.js"></script>
+
+  <!-- Angry pixel bunny reaction -->
+  <script src="bunny-core.js"></script>
+  <script src="bunny-blocked.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="popup.css" />
+  <title>Focus Blocker</title>
+</head>
+<body>
+  <header>
+    <h1>Focus Blocker</h1>
+    <span id="status" class="status idle">Idle</span>
+  </header>
+
+  <section class="timer-card">
+    <div id="time" class="time">25:00</div>
+    <div class="controls">
+      <button id="startFocus" class="btn primary">Start focus</button>
+      <button id="startBreak" class="btn">Break</button>
+      <button id="stop" class="btn danger" hidden>Stop</button>
+    </div>
+  </section>
+
+  <section class="durations">
+    <label>Focus
+      <input id="focusMinutes" type="number" min="1" max="180" value="25" />
+      <span>min</span>
+    </label>
+    <label>Break
+      <input id="breakMinutes" type="number" min="1" max="60" value="5" />
+      <span>min</span>
+    </label>
+  </section>
+
+  <section class="blocklist">
+    <h2>Blocked sites</h2>
+    <form id="addForm">
+      <input id="newSite" type="text" placeholder="e.g. youtube.com" autocomplete="off" />
+      <button type="submit" class="btn small">Add</button>
+    </form>
+    <ul id="sites"></ul>
+  </section>
+
+  <section class="bunny">
+    <h2>Pixel bunny</h2>
+    <label class="row">
+      <span>Show bunny</span>
+      <input id="bunnyEnabled" type="checkbox" />
+    </label>
+    <label class="row">
+      <span>Anger marks on blocked sites</span>
+      <input id="bunnyAngry" type="checkbox" />
+    </label>
+    <label class="row">
+      <span>Colour</span>
+      <select id="bunnyColor">
+        <option value="cream">Cream</option>
+        <option value="gray">Gray</option>
+        <option value="brown">Brown</option>
+        <option value="mint">Mint</option>
+        <option value="pink">Pink</option>
+      </select>
+    </label>
+    <label class="row">
+      <span>Speed</span>
+      <input id="bunnySpeed" type="range" min="0.5" max="2" step="0.1" value="1" />
+    </label>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+</html>
