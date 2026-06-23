@@ -1,8 +1,3 @@
-// Focus Blocker — content script. Runs on every page.
-// During a focus session: a roaming bunny on normal sites, and a giant
-// cursor-chasing rage bunny that takes over blocked sites. When the focus
-// timer ends (session cleared), everything is removed.
-
 (function () {
   if (window.__focusBunnyLoaded) return;
   window.__focusBunnyLoaded = true;
@@ -12,8 +7,8 @@
   const DEFAULT_BLOCKLIST =
     ["youtube.com", "twitter.com", "x.com", "reddit.com", "instagram.com", "facebook.com", "tiktok.com"];
 
-  let ctrl = null;        // current bunny controller (roaming or rage)
-  let mode = null;        // "browse" | "rage" | null
+  let ctrl = null;
+  let mode = null;
   let state = { bunny: DEF, session: null, blocklist: DEFAULT_BLOCKLIST };
 
   function normalizeDomain(d) {
@@ -42,14 +37,12 @@
     const session = state.session;
     const focusActive = !!session && session.mode === "focus" && session.endTime > Date.now();
 
-    // Bunny only exists while a focus session is running (and if enabled).
     if (!bunny.enabled || !focusActive) { teardown(); return; }
 
-    // Angry takeover on a blocked site; roaming bunny everywhere else.
     const blocked = hostIsBlocked(location.hostname, state.blocklist);
     const want = blocked ? "rage" : "browse";
 
-    if (mode === want && ctrl) return; // already in the right state
+    if (mode === want && ctrl) return;
     teardown();
     mode = want;
     ctrl = want === "rage"
@@ -76,13 +69,12 @@
     });
     load();
   } catch (e) {
-    // storage unavailable — do nothing
+
   }
 
-  // Safety net: drop the bunny exactly when the timer runs out, even if the
-  // background's storage update is delayed.
   setInterval(() => {
     const s = state.session;
     if (s && s.endTime <= Date.now()) { state.session = null; evaluate(); }
   }, 1000);
 })();
+

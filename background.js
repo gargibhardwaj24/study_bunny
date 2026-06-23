@@ -1,17 +1,10 @@
-// Focus Blocker — background service worker
-// Owns the timer + session state. Blocking itself is enforced in the content
-// script (bunny.js): on a blocked site during a focus session, a giant angry
-// bunny takes over the page. No redirecting — the tab stays open.
-
 const ALARM_NAME = "focusSessionEnd";
 
 const DEFAULTS = {
   blocklist: ["youtube.com", "twitter.com", "x.com", "reddit.com", "instagram.com", "facebook.com", "tiktok.com"],
   settings: { focusMinutes: 25, breakMinutes: 5 },
-  session: null // { mode: "focus" | "break", endTime: <ms epoch> }
+  session: null
 };
-
-// --- storage helpers -------------------------------------------------------
 
 async function getState() {
   const stored = await chrome.storage.local.get(["blocklist", "settings", "session"]);
@@ -22,7 +15,6 @@ async function getState() {
   };
 }
 
-// Persist defaults so the content script always finds a blocklist in storage.
 async function ensureDefaults() {
   const stored = await chrome.storage.local.get(["blocklist", "settings"]);
   const patch = {};
@@ -31,8 +23,6 @@ async function ensureDefaults() {
   if (Object.keys(patch).length) await chrome.storage.local.set(patch);
 }
 
-// Purge any leftover declarativeNetRequest redirect rules from older versions,
-// so blocked tabs are no longer redirected.
 async function clearLegacyRules() {
   try {
     const existing = await chrome.declarativeNetRequest.getDynamicRules();
@@ -42,11 +32,9 @@ async function clearLegacyRules() {
       });
     }
   } catch (e) {
-    // declarativeNetRequest unavailable — nothing to clear
+
   }
 }
-
-// --- badge -----------------------------------------------------------------
 
 function setBadge(session) {
   if (session && session.mode === "focus") {
@@ -59,8 +47,6 @@ function setBadge(session) {
     chrome.action.setBadgeText({ text: "" });
   }
 }
-
-// --- session control -------------------------------------------------------
 
 async function startSession(mode) {
   const { settings } = await getState();
@@ -82,7 +68,6 @@ async function stopSession() {
   return null;
 }
 
-// Called when an alarm fires (session naturally ended).
 async function onSessionEnd() {
   const { session } = await getState();
   await chrome.storage.local.set({ session: null });
@@ -97,17 +82,14 @@ async function onSessionEnd() {
       message: wasFocus ? "Nice work. Take a break when you're ready." : "Ready for another focus session?"
     });
   } catch (e) {
-    // notifications permission not granted — ignore
+
   }
 }
-
-// --- event wiring ----------------------------------------------------------
 
 chrome.alarms.onAlarm.addListener(alarm => {
   if (alarm.name === ALARM_NAME) onSessionEnd();
 });
 
-// Re-sync state whenever the worker spins up (browser start, reload, etc.).
 async function resync() {
   await ensureDefaults();
   await clearLegacyRules();
@@ -122,7 +104,6 @@ async function resync() {
 chrome.runtime.onStartup.addListener(resync);
 chrome.runtime.onInstalled.addListener(resync);
 
-// Messages from the popup.
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   (async () => {
     switch (msg.type) {
@@ -147,5 +128,6 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         sendResponse({ error: "unknown message" });
     }
   })();
-  return true; // keep the channel open for the async response
+  return true;
 });
+

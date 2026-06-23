@@ -1,7 +1,3 @@
-// Focus Blocker — angry bunny on the blocked page.
-// Mounts the companion in "angry" mode; it stomps & shows anger marks,
-// then calms back to normal after a few seconds.
-
 (function () {
   const DEF = (window.FocusBunny && window.FocusBunny.DEFAULTS) ||
     { enabled: true, color: "cream", speed: 1, angry: true };
@@ -20,3 +16,4 @@
     if (area === "local" && changes.bunny) apply(changes.bunny.newValue);
   });
 })();
+

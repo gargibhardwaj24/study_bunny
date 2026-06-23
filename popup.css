@@ -1,5 +1,3 @@
-/* Focus Blocker — popup UI (true pixel-art theme) */
-
 @font-face {
   font-family: "PixelFont";
   src: url("fonts/PressStart2P.ttf") format("truetype");
@@ -17,11 +15,10 @@
   --accent: #f4789f;
   --danger: #e5484d;
   --green: #36a06a;
-  /* notched pixel frame (5x5 SVG, sliced) */
+
   --pix: url("data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%275%27 height=%275%27><path d=%27M1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM0 1h1v1h-1zM1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM0 2h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1z%27 fill=%27rgb(74,59,59)%27/></svg>");
 }
 
-/* reusable pixel frame */
 .pix {
   border-style: solid;
   border-width: 5px;
@@ -49,7 +46,6 @@ body {
   -webkit-font-smoothing: none;
 }
 
-/* ---- title bar ---- */
 header {
   display: flex;
   align-items: center;
@@ -80,7 +76,6 @@ h2 {
   line-height: 1.4;
 }
 
-/* ---- status pill ---- */
 .status {
   font-size: 6px;
   padding: 5px 6px;
@@ -93,7 +88,6 @@ h2 {
 .status.focus  { background: var(--danger); }
 .status.break  { background: var(--green); }
 
-/* ---- timer ---- */
 .timer-card {
   background: var(--panel);
   border-style: solid;
@@ -115,7 +109,6 @@ h2 {
   text-shadow: 3px 3px 0 rgba(244,120,159,.55);
 }
 
-/* ---- buttons ---- */
 .controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .btn {
   font-family: inherit;
@@ -140,7 +133,6 @@ h2 {
 .btn.danger  { background: var(--danger); color: #fff; }
 .btn.small   { font-size: 7px; padding: 8px 9px; }
 
-/* ---- durations ---- */
 .durations { display: flex; gap: 12px; margin-bottom: 18px; }
 .durations label {
   flex: 1;
@@ -161,7 +153,6 @@ h2 {
 }
 .durations span { color: var(--muted); }
 
-/* ---- inputs ---- */
 .durations input,
 #newSite,
 .bunny select {
@@ -179,7 +170,6 @@ h2 {
   text-align: center;
 }
 
-/* ---- blocklist ---- */
 .blocklist form { display: flex; gap: 8px; margin-bottom: 12px; }
 #newSite { flex: 1; padding: 9px 8px; font-size: 7px; }
 #newSite:focus,
@@ -214,7 +204,6 @@ h2 {
 #sites .remove:hover { color: var(--danger); }
 #sites .empty { justify-content: center; color: var(--muted); box-shadow: none; }
 
-/* ---- pixel bunny settings ---- */
 .bunny { margin-top: 18px; }
 .bunny .row {
   display: flex;
@@ -233,7 +222,7 @@ h2 {
 .bunny input[type="range"] { width: 96px; accent-color: var(--accent); }
 .bunny input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); }
 
-/* ---- blocky scrollbar ---- */
 #sites::-webkit-scrollbar { width: 12px; }
 #sites::-webkit-scrollbar-track { background: var(--bg); border: 2px solid var(--ink); }
 #sites::-webkit-scrollbar-thumb { background: var(--accent); border: 2px solid var(--ink); }
+

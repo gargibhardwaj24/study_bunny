@@ -1,16 +1,9 @@
-// Focus Blocker — pixel bunny companion (shared engine)
-// Loaded both as a content script (happy roaming bunny on normal pages)
-// and by blocked.html (angry bunny when a blocked site is attempted).
-// Exposes window.FocusBunny.{ mount, DEFAULTS }.
-
 (function () {
   if (window.__focusBunnyCore) return;
   window.__focusBunnyCore = true;
 
   const DEFAULTS = { enabled: true, color: "cream", speed: 1, angry: true };
 
-  // --- pixel sprite (14 wide x 15 tall) ------------------------------------
-  // o=outline  W=body  P=pink  E=eye  M=nose  F=foot
   const SPRITE = [
     "....o....o....",
     "...oWo..oWo...",
@@ -30,7 +23,6 @@
   ];
   const GW = 14, GH = 15;
 
-  // --- colour themes -------------------------------------------------------
   const THEMES = {
     cream: { o: "#5b4a4a", W: "#fff7f3", P: "#f7a8c0", E: "#3a2b2b", M: "#caa0a8", S: "#f0e2db", R: "#ec4d52" },
     gray:  { o: "#3f4854", W: "#eceff3", P: "#f2a0b6", E: "#2c333d", M: "#aeb6c0", S: "#cfd6de", R: "#ec4d52" },
@@ -39,18 +31,17 @@
     pink:  { o: "#7a4a5a", W: "#ffd9e6", P: "#ff9ec0", E: "#5a3340", M: "#e090ab", S: "#f7b9cf", R: "#e5484d" }
   };
 
-  const SCALE = 4; // device pixels per sprite cell
+  const SCALE = 4;
   const DISP_W = GW * SCALE, DISP_H = GH * SCALE;
 
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
   function retrigger(el, cls) {
     el.classList.remove(cls);
-    void el.offsetWidth; // force reflow so the animation replays
+    void el.offsetWidth;
     el.classList.add(cls);
   }
 
-  // --- drawing -------------------------------------------------------------
   function drawSprite(canvas, theme, angry) {
     canvas.width = GW; canvas.height = GH;
     const ctx = canvas.getContext("2d");
@@ -67,12 +58,12 @@
     }
     if (angry) {
       ctx.fillStyle = theme.o;
-      // angled angry brows above the eyes
+
       ctx.fillRect(4, 8, 1, 1); ctx.fillRect(5, 9, 1, 1);
       ctx.fillRect(9, 8, 1, 1); ctx.fillRect(8, 9, 1, 1);
-      // tense little mouth
+
       ctx.fillRect(6, 12, 1, 1); ctx.fillRect(7, 12, 1, 1);
-      // flushed red cheeks
+
       ctx.fillStyle = theme.R;
       ctx.fillRect(3, 10, 1, 1); ctx.fillRect(3, 11, 1, 1);
       ctx.fillRect(10, 10, 1, 1); ctx.fillRect(10, 11, 1, 1);
@@ -95,7 +86,6 @@
         if (small[y][x] === "r") ctx.fillRect(7 + x, 1 + y, 1, 1);
   }
 
-  // --- styles (injected once) ----------------------------------------------
   function injectStyles() {
     if (document.getElementById("focus-bunny-style")) return;
     const css = `
@@ -103,7 +93,6 @@
 #focus-bunny-root {
   position: fixed; z-index: 2147483646;
 }
-/* free-roam fills the whole viewport; center is the legacy fixed anchor */
 #focus-bunny-root.fb-left { inset: 0; width: 100vw; height: 100vh; }
 #focus-bunny-root.fb-center { left: 50%; bottom: 6px; width: ${DISP_W}px; height: ${DISP_H + 22}px; }
 .fb-mover { position: absolute; top: 0; left: 0; will-change: transform;
@@ -154,7 +143,6 @@
     (document.head || document.documentElement).appendChild(style);
   }
 
-  // --- mount ---------------------------------------------------------------
   function mount(opts) {
     opts = opts || {};
     if (!document.body) return null;
@@ -224,7 +212,6 @@
       anger.style.display = mood === "angry" && settings.angry ? "block" : "none";
     }
 
-    // happy/idle roaming behaviour
     function browseStep() {
       if (destroyed) return;
       if (!roam) {
@@ -237,10 +224,10 @@
       if (reached) {
         targetX = Math.round(Math.random() * mx);
         targetY = Math.round(Math.random() * my);
-        timer = setTimeout(browseStep, (600 + Math.random() * 1500) / speed); // idle pause
+        timer = setTimeout(browseStep, (600 + Math.random() * 1500) / speed);
         return;
       }
-      // hop toward the target, a bit further horizontally than vertically
+
       const step = 26 * speed;
       const dx = targetX - x, dy = targetY - y;
       const len = Math.hypot(dx, dy) || 1;
@@ -263,7 +250,7 @@
         stomp();
         stompTimer = setInterval(stomp, 1100);
       }
-      // calm back down after a few seconds, then resume happy hopping
+
       calmTimer = setTimeout(function () {
         if (destroyed) return;
         if (stompTimer) { clearInterval(stompTimer); stompTimer = null; }
@@ -295,7 +282,6 @@
     };
   }
 
-  // --- rage mode (full-page blocker) ---------------------------------------
   function pixelFontFace() {
     try {
       const url = chrome.runtime.getURL("fonts/PressStart2P.ttf");
@@ -311,7 +297,6 @@
 #focus-bunny-rage {
   position: fixed; inset: 0; z-index: 2147483647;
   width: 100vw; height: 100vh; overflow: hidden;
-  /* starts barely-there so the small happy bunny reads against the page */
   background: rgba(20,4,6,.06);
   transition: background .45s ease;
   cursor: not-allowed; animation: fbr-fade .2s ease-out;
@@ -327,7 +312,6 @@
 }
 .fbr-shaker {
   position: relative; transform-origin: center bottom;
-  /* grows from small (normal bunny) to full size when rage kicks in */
   transform: scale(.16);
   transition: transform .55s cubic-bezier(.18,1.5,.4,1);
 }
@@ -393,9 +377,9 @@
     anger.className = "fbr-anger";
     const caption = document.createElement("div");
     caption.className = "fbr-caption";
-    caption.textContent = "Get back to focus — close this tab.";
+    caption.textContent = "Get back to work — close this tab.";
 
-    drawSprite(sprite, theme, false); // appears as the normal/happy bunny first
+    drawSprite(sprite, theme, false);
     drawAnger(anger, theme);
 
     shaker.append(anger, sprite);
@@ -403,7 +387,6 @@
     overlay.append(stage, caption);
     document.body.appendChild(overlay);
 
-    // size the bunny to dominate the viewport
     function sizeBunny() {
       const h = Math.min(window.innerWidth, window.innerHeight) * 0.72;
       sprite.style.height = h + "px";
@@ -413,11 +396,9 @@
     }
     sizeBunny();
 
-    // lock the page: no scrolling, swallow interaction
     const prevOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
 
-    // chase the cursor
     let tx = window.innerWidth / 2, ty = window.innerHeight / 2;
     let cx = tx, cy = ty;
     function onMove(e) { tx = e.clientX; ty = e.clientY; }
@@ -434,21 +415,19 @@
     }
     loop();
 
-    // normal -> angry transition: show the small happy bunny, then it gets
-    // angry, scales up huge, darkens the page, and starts stomping.
     let stompTimer = null, t1 = null, t2 = null;
     function stomp() { retrigger(shaker, "fbr-stomp"); }
-    if (settings.angry) anger.style.display = "block"; // revealed via opacity when raging
+    if (settings.angry) anger.style.display = "block";
 
     t1 = setTimeout(function () {
       if (destroyed) return;
-      drawSprite(sprite, theme, true);      // angry face + red cheeks
-      overlay.classList.add("fbr-raging");  // grow, darken, reveal marks + caption
+      drawSprite(sprite, theme, true);
+      overlay.classList.add("fbr-raging");
       t2 = setTimeout(function () {
         if (destroyed) return;
         stomp();
         if (settings.angry) stompTimer = setInterval(stomp, 900);
-      }, 520); // start stomping once it has finished growing
+      }, 520);
     }, 700);
 
     function block(e) { e.preventDefault(); e.stopPropagation(); }
@@ -474,3 +453,4 @@
 
   window.FocusBunny = { mount, mountRage, DEFAULTS };
 })();
+

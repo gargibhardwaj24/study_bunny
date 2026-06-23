@@ -1,5 +1,3 @@
-// Focus Blocker — popup UI logic
-
 const $ = sel => document.querySelector(sel);
 
 const els = {
@@ -40,7 +38,7 @@ function renderTimer() {
   if (session) {
     const remaining = session.endTime - Date.now();
     if (remaining <= 0) {
-      // session just ended — refresh full state from background
+
       refresh();
       return;
     }
@@ -160,8 +158,6 @@ async function removeSite(site) {
   renderBlocklist();
 }
 
-// --- events ---
-
 els.startFocus.addEventListener("click", async () => {
   await saveSettings();
   session = await send({ type: "start", mode: "focus" });
@@ -200,3 +196,4 @@ els.bunnyColor.addEventListener("change", saveBunny);
 els.bunnySpeed.addEventListener("change", saveBunny);
 
 refresh();
+
